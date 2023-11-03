@@ -3,6 +3,7 @@ CXX := g++
 
 SIM_EXECS := addm_simulate 
 MLE_EXECS := addm_mle 
+TEST_EXECS := tutorial
 
 LIB_DIR := lib
 OBJ_DIR := obj
@@ -22,7 +23,7 @@ INSTALL_INC_DIR := /usr/include
 
 PY_SUFFIX := $(shell python3-config --extension-suffix)
 PY_INCLUDES := $(shell python3 -m pybind11 --includes)
-PY_SO_FILE := $(addsuffix $(PY_SUFFIX), addm_toolbox_gpu)
+PY_SO_FILE := $(addsuffix $(PY_SUFFIX), addm_toolbox_cuda)
 
 CPP_FILES := $(filter-out $(LIB_DIR)/bindings.cpp, $(wildcard $(LIB_DIR)/*.cpp))
 CU_FILES := $(wildcard $(LIB_DIR)/*.cu)

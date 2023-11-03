@@ -287,7 +287,6 @@ void getTrialLikelihoodKernel(
 
 
 void aDDM::callGetTrialLikelihoodKernel(
-    bool debug, 
     int trialsPerThread,
     int numBlocks,
     int threadsPerBlock, 
@@ -304,6 +303,8 @@ void aDDM::callGetTrialLikelihoodKernel(
     float approxStateStep, 
     float decay
 ) {
+    bool debug = false; 
+    
     int *h_fixLens = new int[numTrials];
     int maxFixLen = 0; 
     for (int i = 0; i < numTrials; i++) {
@@ -448,7 +449,7 @@ void aDDM::callGetTrialLikelihoodKernel(
 }
 
 
-ProbabilityData aDDM::computeGPUNLL(std::vector<aDDMTrial> trials, bool debug, int trialsPerThread, int timeStep, float approxStateStep) {
+ProbabilityData aDDM::computeGPUNLL(std::vector<aDDMTrial> trials, int trialsPerThread, int timeStep, float approxStateStep) {
     int numTrials = trials.size();
 
     aDDMTrial* d_trials;
@@ -461,7 +462,7 @@ ProbabilityData aDDM::computeGPUNLL(std::vector<aDDMTrial> trials, bool debug, i
     int numBlocks = 16; 
 
     aDDM::callGetTrialLikelihoodKernel(
-        debug, trialsPerThread, numBlocks, threadsPerBlock,
+        trialsPerThread, numBlocks, threadsPerBlock,
         trials.data(), d_likelihoods, numTrials, 
         d, sigma, theta, k, barrier, 
         nonDecisionTime, timeStep, approxStateStep, decay

@@ -249,10 +249,12 @@ void getTrialLikelihoodKernel(
 }
 
 void DDM::callGetTrialLikelihoodKernel(
-    bool debug, int trialsPerThread, int numBlocks, int threadsPerBlock, 
+    int trialsPerThread, int numBlocks, int threadsPerBlock, 
     DDMTrial *trials, double *likelihoods, 
     int numTrials, float d, float sigma, float barrier, 
     int nonDecisionTime, int timeStep, float approxStateStep, float dec) {
+
+    bool debug = false;  
 
     int *d_RTs, *d_choices, *d_VDs;
     cudaMalloc((void**)&d_RTs, numTrials * sizeof(int));
@@ -328,7 +330,7 @@ void DDM::callGetTrialLikelihoodKernel(
     }
         
 
-ProbabilityData DDM::computeGPUNLL(std::vector<DDMTrial> trials, bool debug, int trialsPerThread, int timeStep, float approxStateStep) {
+ProbabilityData DDM::computeGPUNLL(std::vector<DDMTrial> trials, int trialsPerThread, int timeStep, float approxStateStep) {
     int numTrials = trials.size(); 
 
     DDMTrial *d_trials;
@@ -341,7 +343,7 @@ ProbabilityData DDM::computeGPUNLL(std::vector<DDMTrial> trials, bool debug, int
     int numBlocks = 16;
 
     DDM::callGetTrialLikelihoodKernel(
-        debug, trialsPerThread, numBlocks, threadsPerBlock, 
+        trialsPerThread, numBlocks, threadsPerBlock, 
         trials.data(), d_likelihoods, 
         numTrials, d, sigma, barrier, 
         nonDecisionTime, timeStep, approxStateStep, decay);
