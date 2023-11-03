@@ -1,6 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include "cpp_toolbox.h"
+#include "cuda_toolbox.h"
 #include <string>
 
 namespace py = pybind11; 
@@ -17,8 +17,8 @@ void declareMLEinfo(py::module &m, const std::string &typestr) {
         .def_readonly("likelihoods", &Class::likelihoods);
 }
 
-PYBIND11_MODULE(addm_toolbox_cpp, m) {
-    m.doc() = "aDDMToolbox developed for C++.";
+PYBIND11_MODULE(addm_toolbox_cuda, m) {
+    m.doc() = "aDDMToolbox developed for CUDA.";
     declareMLEinfo<DDM>(m, "DDM"); 
     declareMLEinfo<aDDM>(m, "aDDM");
     py::class_<ProbabilityData>(m, "ProbabilityData")
@@ -72,26 +72,15 @@ PYBIND11_MODULE(addm_toolbox_cpp, m) {
         .def("exportTrial", &DDM::exportTrial, 
             Arg("dt"), 
             Arg("filename"))
-        .def("getTrialLikelihood", &DDM::getTrialLikelihood, 
-            Arg("trial"), 
-            Arg("debug")=false, 
-            Arg("timeStep")=10, 
-            Arg("approxStateStep")=0.1)
         .def("simulateTrial", &DDM::simulateTrial, 
             Arg("valueLeft"), 
             Arg("valueRight"),
             Arg("timeStep")=10, 
             Arg("seed")=-1)
-        .def("computeParallelNLL", &DDM::computeParallelNLL, 
-            Arg("trials"), 
-            Arg("debug")=false, 
-            Arg("timeStep")=10, 
-            Arg("approxStateStep")=0.1)
         .def_static("fitModelMLE", &DDM::fitModelMLE, 
             Arg("trials"), 
             Arg("rangeD"), 
             Arg("rangeSigma"), 
-            Arg("computeMethod")="basic", 
             Arg("normalizePosteriors")=false,
             Arg("barrier")=1, 
             Arg("nonDecisionTime")=0,
@@ -130,11 +119,6 @@ PYBIND11_MODULE(addm_toolbox_cpp, m) {
         .def("exportTrial", &aDDM::exportTrial, 
             Arg("adt"), 
             Arg("filename"))
-        .def("getTrialLikelihood", &aDDM::getTrialLikelihood, 
-            Arg("trial"), 
-            Arg("debug")=false, 
-            Arg("timeStep")=10, 
-            Arg("approxStateStep")=0.1)
         .def("simulateTrial", &aDDM::simulateTrial, 
             Arg("valueLeft"), 
             Arg("valueRight"), 
@@ -144,23 +128,20 @@ PYBIND11_MODULE(addm_toolbox_cpp, m) {
             Arg("fixationDist")=fixDists(), 
             Arg("timeBins")=vector<int>(), 
             Arg("seed")=-1)
-        .def("computeParallelNLL", &aDDM::computeParallelNLL, 
-            Arg("trials"), 
-            Arg("debug")=false, 
-            Arg("timeStep")=10, 
-            Arg("approxStateStep")=0.1)
         .def_static("fitModelMLE", &aDDM::fitModelMLE, 
             Arg("trials"), 
             Arg("rangeD"), 
             Arg("rangeSigma"), 
             Arg("rangeTheta"),
             Arg("rangeK")=vector<float>{0},
-            Arg("computeMethod")="basic",
             Arg("normalizePosteriors")=false,
             Arg("barrier")=1, 
             Arg("nonDecisionTime")=0,
             Arg("bias")=vector<float>{0}, 
-            Arg("decay")=vector<float>{0});
+            Arg("decay")=vector<float>{0},
+            Arg("timeStep")=10, 
+            Arg("approxStateStep")=0.1, 
+            Arg("trialsPerThread")=10); 
     m.def("loadDataFromSingleCSV", &loadDataFromSingleCSV, 
         Arg("filename"));
     m.def("loadDataFromCSV", &loadDataFromCSV, 

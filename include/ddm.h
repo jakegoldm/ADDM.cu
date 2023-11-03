@@ -75,7 +75,6 @@ class DDMTrial {
 class DDM {
     private:
         void callGetTrialLikelihoodKernel(
-            bool debug, 
             int trialsPerThread, int numBlocks, int threadsPerBlock, 
             DDMTrial *trials, double *likelihoods, int numTrials, 
             float d, float sigma, float barrier, 
@@ -148,8 +147,6 @@ class DDM {
          * the GPU to maximize the number of trials being computed in parallel. 
          * 
          * @param trials Vector of DDMTrials that the model should calculate the NLL for. 
-         * @param debug Boolean specifying if state variables should be printed for debugging 
-         * purposes. 
          * @param trialsPerThread Number of trials that each thread should be designated to 
          * copmute. Must be divisible by the total number of trials. 
          * @param timeStep Value in milliseconds used for binning the time axis. 
@@ -158,7 +155,7 @@ class DDM {
          * likelihood. 
          */
         ProbabilityData computeGPUNLL(
-            vector<DDMTrial> trials, bool debug=false, int trialsPerThread=10, 
+            vector<DDMTrial> trials, int trialsPerThread=10, 
             int timeStep=10, float approxStateStep=0.1);
 
         /**

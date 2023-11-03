@@ -128,7 +128,7 @@ class aDDMTrial: public DDMTrial {
 class aDDM: public DDM {
     private:
         void callGetTrialLikelihoodKernel(
-            bool debug, int trialsPerThread, int numBlocks, int threadsPerBlock, 
+            int trialsPerThread, int numBlocks, int threadsPerBlock, 
             aDDMTrial *trials, double *likelihoods, int numTrials, 
             float d, float sigma, float theta,float k, float barrier, 
             int nonDecisionTime, int timeStep, float approxStateStep, float decay);
@@ -212,7 +212,7 @@ class aDDM: public DDM {
          * likelihoods.
          */
         ProbabilityData computeGPUNLL(
-            vector<aDDMTrial> trials, bool debug=false, int trialsPerThread=10, 
+            vector<aDDMTrial> trials, int trialsPerThread=10, 
             int timeStep=10, float approxStateStep=0.1
         );
 
@@ -250,7 +250,8 @@ class aDDM: public DDM {
             vector<aDDMTrial> trials, vector<float> rangeD, vector<float> rangeSigma, 
             vector<float> rangeTheta, vector<float> rangeK={0}, 
             bool normalizePosteriors=false, float barrier=1, unsigned int nonDecisionTime=0, 
-            vector<float> bias={0}, vector<float> decay={0}
+            vector<float> bias={0}, vector<float> decay={0}, 
+            int timeStep=10, float approxStateStep=0.1, int trialsPerThread=10
         );
 };
 

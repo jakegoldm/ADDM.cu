@@ -329,7 +329,10 @@ MLEinfo<aDDM> aDDM::fitModelMLE(
     float barrier,
     unsigned int nonDecisionTime,
     std::vector<float> bias, 
-    std::vector<float> decay) {
+    std::vector<float> decay, 
+    int timeStep, 
+    float approxStateStep, 
+    int trialsPerThread) {
 
     sort(rangeD.begin(), rangeD.end());
     sort(rangeSigma.begin(), rangeSigma.end());
@@ -361,7 +364,7 @@ MLEinfo<aDDM> aDDM::fitModelMLE(
 
     aDDM optimal = aDDM(); 
     for (aDDM addm : potentialModels) {
-        ProbabilityData aux = addm.computeGPUNLL(trials);
+        ProbabilityData aux = addm.computeGPUNLL(trials, trialsPerThread, timeStep, approxStateStep);
         if (normalizePosteriors) {
             allTrialLikelihoods.insert({addm, aux});
             posteriors.insert({addm, 1 / numModels});

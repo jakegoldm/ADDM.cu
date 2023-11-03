@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector> 
 #include <fstream>
-#include <addm/cpp_toolbox.h>
+#include <addm/cuda_toolbox.h>
 
 // Location of the aDDM simulations. 
 const std::string SIMS = "results/addm_simulations.csv";
