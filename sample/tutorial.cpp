@@ -8,10 +8,9 @@ int main() {
     for (const auto& [subjectID, trials] : data) {
         std::cout << subjectID << ": "; 
         // Compute the most optimal parameters to generate 
-        MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5}, {0, 0.5}, "thread");
+        MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5}, {0});
         std::cout << "d: " << info.optimal.d << " "; 
         std::cout << "sigma: " << info.optimal.sigma << " "; 
-        std::cout << "theta: " << info.optimal.theta << " "; 
-        std::cout << "k: " << info.optimal.k << std::endl; 
+        std::cout << "theta: " << info.optimal.theta << std::endl; 
     }
 }
