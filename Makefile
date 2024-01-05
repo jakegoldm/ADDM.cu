@@ -79,7 +79,7 @@ test:
 run: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
 	$(foreach source, $(RUN_EXECS), $(call compile_target, $(source));)
 
-all: sim mle test
+all: sim mle run
 
 
 pybind: 
