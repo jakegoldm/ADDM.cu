@@ -25,23 +25,23 @@
 var NAVTREE =
 [
   [ "ADDM.cu", "index.html", [
-    [ "Table of Contents", "index.html#autotoc_md1", null ],
-    [ "Getting Started", "index.html#autotoc_md2", null ],
-    [ "Docker Image", "index.html#autotoc_md3", null ],
-    [ "Local Installation", "index.html#autotoc_md4", [
-      [ "Requirements", "index.html#autotoc_md5", null ],
-      [ "Installation", "index.html#autotoc_md6", null ]
+    [ "Getting Started", "index.html#autotoc_md1", null ],
+    [ "Docker Image", "index.html#autotoc_md2", null ],
+    [ "Local Installation", "index.html#autotoc_md3", [
+      [ "Requirements", "index.html#autotoc_md4", null ],
+      [ "Installation", "index.html#autotoc_md5", null ]
     ] ],
-    [ "Basic Usage", "index.html#autotoc_md7", null ],
-    [ "Tutorial", "index.html#autotoc_md8", null ],
-    [ "Testing", "index.html#autotoc_md9", null ],
-    [ "Modifying the Toolbox", "index.html#autotoc_md10", [
-      [ "Alternative Optimization Algorithms", "index.html#autotoc_md11", null ]
+    [ "Basic Usage", "index.html#autotoc_md6", null ],
+    [ "Tutorial", "index.html#autotoc_md7", null ],
+    [ "Testing", "index.html#autotoc_md8", null ],
+    [ "Modifying the Toolbox", "index.html#autotoc_md9", [
+      [ "Alternative Optimization Algorithms", "index.html#autotoc_md10", null ]
     ] ],
-    [ "Python Bindings", "index.html#autotoc_md12", [
-      [ "Optional: Python Syntax Highlighting", "index.html#autotoc_md13", null ]
+    [ "Python Bindings", "index.html#autotoc_md11", [
+      [ "Optional: Python Syntax Highlighting", "index.html#autotoc_md12", null ]
     ] ],
-    [ "Data Analysis Scripts", "index.html#autotoc_md14", null ],
+    [ "Data Analysis Scripts", "index.html#autotoc_md13", null ],
+    [ "Uninstalling the Library", "index.html#autotoc_md14", null ],
     [ "Authors", "index.html#autotoc_md15", null ],
     [ "Acknowledgements", "index.html#autotoc_md16", null ],
     [ "Classes", "annotated.html", [

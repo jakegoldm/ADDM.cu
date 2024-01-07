@@ -10,9 +10,9 @@ var searchData=
   ['addm_5fsimulate_2ecpp_7',['addm_simulate.cpp',['../addm__simulate_8cpp.html',1,'']]],
   ['addm_5ftest_2ecpp_8',['addm_test.cpp',['../addm__test_8cpp.html',1,'']]],
   ['addmtrial_9',['aDDMTrial',['../classaDDMTrial.html',1,'aDDMTrial'],['../classaDDMTrial.html#aa10527b5851a8395529eff1e8ad86adc',1,'aDDMTrial::aDDMTrial(unsigned int RT, int choice, int valueLeft, int valueRight, vector&lt; int &gt; fixItem={}, vector&lt; int &gt; fixTime={}, vector&lt; float &gt; fixRDV={}, float uninterruptedLastFixTime=0)'],['../classaDDMTrial.html#ae406a1f1ae278a292421caedafda67a2',1,'aDDMTrial::aDDMTrial()']]],
-  ['algorithms_10',['Alternative Optimization Algorithms',['../index.html#autotoc_md11',1,'']]],
-  ['alternative_20optimization_20algorithms_11',['Alternative Optimization Algorithms',['../index.html#autotoc_md11',1,'']]],
-  ['analysis_20scripts_12',['Data Analysis Scripts',['../index.html#autotoc_md14',1,'']]],
+  ['algorithms_10',['Alternative Optimization Algorithms',['../index.html#autotoc_md10',1,'']]],
+  ['alternative_20optimization_20algorithms_11',['Alternative Optimization Algorithms',['../index.html#autotoc_md10',1,'']]],
+  ['analysis_20scripts_12',['Data Analysis Scripts',['../index.html#autotoc_md13',1,'']]],
   ['arg_13',['Arg',['../bindings_8cpp.html#a5fbc991384a035f0758be9091b13b437',1,'bindings.cpp']]],
   ['authors_14',['Authors',['../index.html#autotoc_md15',1,'']]]
 ];
