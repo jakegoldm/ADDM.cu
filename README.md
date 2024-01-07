@@ -2,15 +2,9 @@
 
 CUDA implementation of the aDDM-Toolbox. 
 
-## Table of Contents ## 
-
-<!-- START doctoc -->
-<!-- END doctoc -->
-
 ## Getting Started ## 
 
 The aDDM Toolbox library for CUDA can be cloned on the user's machine or run in a Docker container. __We recommend using the Docker image unless you are familiar with installing and compiling c++ packages__. *Note that although this is a CUDA library, the installation and usage process is almost identical to the C++ instructions - don't worry if you don't have any CUDA experience.* see the [Local Installation](#local-installation) section. For instructions on the Docker installation, continue to the [Docker Image](#docker-image) section. 
-
 
 ## Docker Image ## 
 
@@ -79,7 +73,7 @@ $ make install
 
 ## Basic Usage ##
 
-Both of the above methods will install the `libaddm.so` shared library as well as the corresponding header files. Although there are multiple header files corresponding to the aDDM and DDM programs, simply adding `#include <addm/cpp_toolbox.h>` to a C++ program will include all necessary headers. A simple usage example is described below.
+Both of the above methods will install the `libaddm.so` shared library as well as the corresponding header files. Although there are multiple header files corresponding to the aDDM and DDM programs, simply adding `#include <addm/cuda_toolbox.h>` to a C++ program will include all necessary headers. A simple usage example is described below.
 
 To use the C++ toolbox, you need to create programs (files with `.cpp` extensions), compile them (e.g. using `g++`) and then run them. If you have installed the toolbox locally, you can create your programs or the ones described in this tutorual in any text editor you have on your system. Alternatively, if you're using the Docker image, as advised above, you can use `vim` as the editor to write or paste the code from the tutorial. 
 
@@ -92,7 +86,7 @@ to create a new file names `main.cpp`, hit `i` to copy and paste the code from b
 
 `main.cpp`:
 ```cpp
-#include <addm/cpp_toolbox.h>
+#include <addm/cuda_toolbox.h>
 #include <iostream>
 
 int main() {
@@ -154,7 +148,7 @@ Let's break this down piece by piece:
 #include <addm/cuda_toolbox.h>
 ```
 
-This tells the C++ pre-processor to find the `addm` library and the main header file `cpp_toolbox.h`. The main header file includes all sub-headers for the `DDM` and `aDDM` classes and utility methods, so there is no need to include any other files. If you haven't already, run `make install` to install the `addm` library on your machine.
+This tells the C++ pre-processor to find the `addm` library and the main header file `cuda_toolbox.h`. The main header file includes all sub-headers for the `DDM` and `aDDM` classes and utility methods, so there is no need to include any other files. If you haven't already, run `make install` to install the `addm` library on your machine.
 
 ```cpp
 #include <iostream>
@@ -341,6 +335,12 @@ A set of data analysis and visualization tools are provided in the [analysis](an
 * Value Differences against Response Time Frequencies. 
 
 See the individual file documentation for usage instructions. 
+
+## Uninstalling the Library ## 
+
+To uninstall the aDDM library, run `make uninstall`. This will remove the locally installed `addm` directory. 
+
+*In the event of a __Permission Denied__ error, precede the above command with __sudo__.*
 
 ## Authors ## 
 
