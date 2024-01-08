@@ -1,0 +1,27 @@
+{
+  "name": "addm.cu",
+  "version": "1.0.0",
+  "description": "CUDA implementation of the aDDM-Toolbox.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakegoldm/ADDM.cu.git"
+  },
+  "author": "Jake Goldman",
+  "license": "GPL",
+  "bugs": {
+    "url": "https://github.com/jakegoldm/ADDM.cu/issues"
+  },
+  "homepage": "https://github.com/jakegoldm/ADDM.cu#readme",
+  "dependencies": {
+    "@jakegoldm/doxygen-awesome-css": "github:jakegoldm/doxygen-awesome-css"
+  }
+}

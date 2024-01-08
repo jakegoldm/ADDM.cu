@@ -2,31 +2,68 @@
 
 CUDA implementation of the aDDM-Toolbox. 
 
+## Getting Started ## 
 
-## Requirements ##
+The aDDM Toolbox library for CUDA can be cloned on the user's machine or run in a Docker container. __We recommend using the Docker image unless you are familiar with installing and compiling c++ packages__. *Note that although this is a CUDA library, the installation and usage process is almost identical to the C++ instructions - don't worry if you don't have any CUDA experience.* see the [Local Installation](#local-installation) section. For instructions on the Docker installation, continue to the [Docker Image](#docker-image) section. 
 
-This library requires g++ version 11.3.0, as well as three third-party C++ packages for thread pools, JSON processing, and statistical distributions:
+## Docker Image ## 
+
+To pull a Docker Image with ADDM.cu installed, follow the steps below: 
+
+* Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
+* Start Docker Desktop. 
+* Pull the Docker image, currently linked at `rnlcaltech/addm.cu`. This can be done via terminal using 
+
+```shell
+docker pull rnlcaltech/addm.cu:latest
+```
+* You can use the Docker image either through Docker Desktop and selecting __run__ on `rnlcaltech/addm.cu` in the list of your local Docker or using a CLI with the following command: 
+
+```shell
+docker run -it --rm \
+    -v $(pwd):/home \
+    rnlcaltech/addm.cu:latest
+```
+
+This command will mount `/home` in the Docker container to your current directory. Any files you want to keep after exiting the container should be saved there.
+
+* If you not on an architecture that is currently supported by the images on Docker Hub you can build the image appropriate for your system using the [Dockerfile](https://github.com/aDDM-Toolbox/ADDM.cu/blob/main/Dockerfile) provided in this repo. To do so navigate to the directory you cloned this repo to and run: 
+
+``` shell
+docker build -t {USER_NAME}/addm.cu:{YOUR_TAG} -f ./Dockerfile .
+```
+
+## Local Installation ##
+
+Skip this if you are using the Docker image as recommended above. 
+
+### Requirements ###
+
+The standard build of the ADDM.cu assumes the Linux Ubuntu Distribution 22.04. This library requires g++ 11.3.0, as well as several third-party C++ packages:
 
 * [BS::thread_pool](https://github.com/bshoshany/thread-pool)
 * [JSON for Modern C++](https://github.com/nlohmann/json)
 * [Boost Math/Statistical Distributions](https://www.boost.org/doc/libs/?view=category_math)
+* [Catch2](https://github.com/catchorg/Catch2)
 
-These dependencies can be installed using the following commands: 
+These dependencies can be installed using the following commands. Note that they assume the paths `/usr/include/c++/11/` and `apt-get` exist on your system.
 
 ```shell
 $ wget -O /usr/include/c++/11/BS_thread_pool.hpp https://raw.githubusercontent.com/bshoshany/thread-pool/master/include/BS_thread_pool.hpp
 $ mkdir -p /usr/include/c++/11/nlohmann
 $ wget -O /usr/include/c++/11/nlohmann/json.hpp https://raw.githubusercontent.com/nlohmann/json/develop/single_include/nlohmann/json.hpp
-$ apt-get install libboost-math-dev libboost-math1.74-dev
+$ apt-get install libboost-math-dev libboost-math1.74-dev catch2
 ```
+
+Be sure to clone the [ADDM.cu](https://github.com/aDDM-Toolbox/ADDM.cu) library from Github if you haven't done so already. 
 
 *Note that the installation directory /usr/include/c++/11 may be modified to support newer versions of C++. In the event of a __Permission Denied__ error, precede the above commands with __sudo__.*
 
 The latest version of NVIDIA CUDA is also requried to be installed locally. This includes NVCC and CUDA versions 12.2, whose installation guidelines are described in the [NVIDIA Documentation](https://docs.nvidia.com/cuda/cuda-installation-guide-linux/index.html).
 
-## Installation and Usage ## 
+### Installation ### 
 
-TThe aDDM-Toolbox-CPP library can then be built and installed in one step: 
+TThe ADDM.cu library can then be built and installed in one step: 
 
 ```shell
 $ make install
@@ -34,10 +71,21 @@ $ make install
 
 *In the event of a __Permission Denied__ error, precede the above command with __sudo__.*
 
-This will install the libaddm.so shared library as well as the corresponding header files. Although there are multiple header files corresponding to the aDDM and DDM programs, simply adding `#include <addm/cuda_toolbox.h>` to a C++ program will include all necessary headers. A simple usage example is described below: 
+## Basic Usage ##
+
+Both of the above methods will install the `libaddm.so` shared library as well as the corresponding header files. Although there are multiple header files corresponding to the aDDM and DDM programs, simply adding `#include <addm/cuda_toolbox.h>` to a C++ program will include all necessary headers. A simple usage example is described below.
+
+To use the C++ toolbox, you need to create programs (files with `.cpp` extensions), compile them (e.g. using `g++`) and then run them. If you have installed the toolbox locally, you can create your programs or the ones described in this tutorual in any text editor you have on your system. Alternatively, if you're using the Docker image, as advised above, you can use `vim` as the editor to write or paste the code from the tutorial. 
+
+So e.g., after starting a container using the `docker run ...` command above, you will be in a shell session that has the precompiled aDDM-toolbox. From the command line you can run
+
+```shell
+root ➜ ~/ADDM.cpp (main) $ vim main.cpp
+```
+to create a new file names `main.cpp`, hit `i` to copy and paste the code from below, and save it using `:x`.
 
 `main.cpp`:
-```C++
+```cpp
 #include <addm/cuda_toolbox.h>
 #include <iostream>
 
@@ -49,21 +97,30 @@ int main() {
 }
 ```
 
-When compiling any code using the toolbox, include the `-laddm` flag to link with the installed shared object library.
+You can confirm you created the `main.cpp` program by running
+
+```shell
+root ➜ ~/ADDM.cpp (main) $ ls
+```
+
+The next step is to compile this new program. When compiling any code using the toolbox, include the `-laddm` flag to link with the installed shared object library.
 
 ```
-$ nvcc -o main main.cpp -laddm
+$ g++ -o main main.cpp -laddm
 $ ./main
+```
+
+Expected output:
+
+```
 d: 0.005
 sigma: 0.07
 theta: 0.5
 ```
 
-*Note that the default installation of `nvcc` may not be the most updated version. In that case, users should compile with the full path i.e. `/usr/local/cuda-12.2/bin/nvcc`.*
-
 ## Tutorial ##
 
-In the [data](data/) directory, we have included two test files to demonstrate how to use the toolbox. [expdata.csv](data/expdata.csv) contains experimental data and [fixations.csv](data/fixations.csv) contains the corresponding fixation data. A description of how to fit models corresponding to these subjects is located in [tutorial.cpp](sample/tutorial.cpp). We also detail the process below. 
+In the [data](data/) directory, we have included two test files to demonstrate how to use the toolbox. [expdata.csv](data/expdata.csv) contains sample experimental data and [fixations.csv](data/fixations.csv) contains the corresponding fixation data. A description of how to fit models corresponding to these subjects is located in [tutorial.cpp](sample/tutorial.cpp). An executable version of this script can be built using the `make run` target. The contents of the tutorial are listed below, but can be found __verbatim__ in [tutorial.cpp](sample/tutorial.cpp).
 
 `sample/tutorial.cpp`
 ```cpp
@@ -77,23 +134,27 @@ int main() {
     for (const auto& [subjectID, trials] : data) {
         std::cout << subjectID << ": "; 
         // Compute the most optimal parameters to generate 
-        MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5}, {0, 0.5}, "thread");
+        MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5}, {0}, "thread");
         std::cout << "d: " << info.optimal.d << " "; 
         std::cout << "sigma: " << info.optimal.sigma << " "; 
-        std::cout << "theta: " << info.optimal.theta << " "; 
-        std::cout << "k: " << info.optimal.k << std::endl; 
+        std::cout << "theta: " << info.optimal.theta << std::endl;
     }
-}
+}  
 ```
 
 Let's break this down piece by piece: 
 
 ```cpp
 #include <addm/cuda_toolbox.h>
-#include <iostream> 
 ```
 
-This tells the C++ pre-processor to find the `addm` library and the main header file `cpp_toolbox.h`. The main header file includes all sub-headers for the `DDM` and `aDDM` classes and utility methods, so there is no need to include any other files. If you haven't already, run `make install` to install the `addm` library on your machine. This also tells the pre-processor to compile with the `<iostream>` library, which provides functionality for printing to the console. 
+This tells the C++ pre-processor to find the `addm` library and the main header file `cuda_toolbox.h`. The main header file includes all sub-headers for the `DDM` and `aDDM` classes and utility methods, so there is no need to include any other files. If you haven't already, run `make install` to install the `addm` library on your machine.
+
+```cpp
+#include <iostream>
+```
+
+This tells the pre-processor to compile with the `<iostream>` library, which provides functionality for printing to the console. 
 
 ```cpp
 // Load trial and fixation data
@@ -129,7 +190,7 @@ __Single CSV__
 |   1	|   -1	|  400 	|   4	        |  5            |   0	    |   300	    |
 |   1	|   -1	|  400 	|   4	        |   5	        |   2	    |   100	    |
 
-The `loadDataFromCSV` function returns a `std::map<int, std::vector<aDDMTrial>>`. This is a mapping from subjectIDs to their corresponding list of trials. A single trial (choice, response time, fixations) is represented in the `aDDMTrial` object. 
+The `loadDataFromCSV` function returns a `std::map<int, std::vector<aDDMTrial>>`. This is a mapping from subjectIDs to their corresponding list of trials. A single trial (choice, response time, fixations) is represented in each `aDDMTrial` object. 
 
 ```cpp
 for (const auto& [subjectID, trials] : data) ...
@@ -140,7 +201,7 @@ Iterate through each individual subjectID and its list of aDDMTrials.
 ```cpp
 std::cout << subjectID << ": "; 
 // Compute the most optimal parameters to generate 
-MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5}, {0, 0.5}, "thread");
+MLEinfo info = aDDM::fitModelMLE(trials, {0.001, 0.002, 0.003}, {0.0875, 0.09, 0.0925}, {0.1, 0.3, 0.5});
 std::cout << "d: " << info.optimal.d << " "; 
 std::cout << "sigma: " << info.optimal.sigma << " "; 
 std::cout << "theta: " << info.optimal.theta << std::endl; 
@@ -152,8 +213,28 @@ Perform model fitting via Maximum Likelihood Estimation (MLE) to find the optima
 * `{0.001, 0.002, 0.003}` - Range to test for the drift rate (d).
 * `{0.0875, 0.09, 0.0925}` - Range to test for noise (sigma).
 * `{0.1, 0.3, 0.5}` - Range to test for the fixation discount (theta).
-* `{0, 0.5}` - Range to test for additive fixation factor (k). 
-* `"thread"` - indicates whether to use the standard or multithreaded implementation. Must be selected between `"basic"` and `"thread"`. 
+
+When building the tutorial with `make run`, an executable will be created at `bin/tutorial`. Running this executable should print the model parameters for each subject. At first, it may seem like most subjects report similar parameters. This is to be expected given the small parameter space the grid search is testing; however, there should be a slight variance among parameters for some subjects. The expected output is described below: 
+
+```
+0: d: 0.001 sigma: 0.0925 theta: 0.1
+1: d: 0.001 sigma: 0.09 theta: 0.1
+2: d: 0.001 sigma: 0.0875 theta: 0.1
+3: d: 0.001 sigma: 0.09 theta: 0.1
+⋮
+```
+
+## Testing ##
+
+A set of basic correctnesss tests are located in the [tests](tests/) directory. These tests may be updated as more features are (potentially) added. Most importantly, these tests check that (1) the toolbox can be installed without error and (2) the installed toolbox performs trial simulation, likelihood estimation, and MLE correctly. To run the tests: 
+
+```shell
+$ make test
+$ bin/addm_test
+```
+
+These tests are also configured to automatically run when pushed to GitHub. If you are contributing to the toolbox, be sure that your commit succesfully runs and passes the tests before attempting to merge. 
+
 
 ## Modifying the Toolbox ## 
 
@@ -191,14 +272,14 @@ When redesigning this segment of code, the minimum requirement is that some `aDD
 
 ## Python Bindings ## 
 
-Python bindings are also provided for users who prefer to work with a Python codebase over C++. The provided bindings are located in [lib/bindings.cpp](lib/bindings.cpp). Note that [pybind11](https://github.com/pybind/pybind11) and Python version 3.10 (at a minimum) are __strict__ prerequisites for installation and usage of the Python code. These can be installed with 
+Python bindings are also provided for users who prefer to work with a Python codebase over C++. The provided bindings are located in [lib/bindings.cpp](lib/bindings.cpp). Note that [pybind11](https://github.com/pybind/pybind11) and Python version 3.10 (at a minimum) are __strict__ prerequisites for installation and usage of the Python code. These are installed with the Docker image. For local isntallation on a LInux OS they can be installed with 
 
 ```shell
 apt-get install python3.10
 pip3 install pybind11
 ```
 
-Once `pybind11` and Python3.10 are installed, the module can be built with:
+Once `pybind11` and Python 3.10 are installed, the module can be built with:
 
 ```
 make pybind
@@ -243,6 +324,23 @@ stubgen -m addm_toolbox_cuda -o .
 ```
 *Note that the `pybind11` shared library file should be built before running `stubgen`.*
 
+## Data Analysis Scripts ##
+
+A set of data analysis and visualization tools are provided in the [analysis](analysis/) directory. Current provided scripts include: 
+
+* DDM Heatmaps for MLE. 
+* aDDM Heatmap for MLE. 
+* Posterior Pair Plots.
+* Time vs RDV for individual trial.
+* Value Differences against Response Time Frequencies. 
+
+See the individual file documentation for usage instructions. 
+
+## Uninstalling the Library ## 
+
+To uninstall the aDDM library, run `make uninstall`. This will remove the locally installed `addm` directory. 
+
+*In the event of a __Permission Denied__ error, precede the above command with __sudo__.*
 
 ## Authors ## 
 

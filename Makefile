@@ -3,23 +3,33 @@ CXX := g++
 
 SIM_EXECS := addm_simulate 
 MLE_EXECS := addm_mle 
-TEST_EXECS := tutorial
+TEST_EXECS := addm_test
+RUN_EXECS := tutorial 
 
 LIB_DIR := lib
 OBJ_DIR := obj
 INC_DIR := include
 BUILD_DIR := bin
 SRC_DIR := sample
+TEST_DIR := tests
 
-CXXFLAGS := -Ofast -march=native -fPIC $(MACROS)
+CXXFLAGS := -O3 -march=native -fPIC $(MACROS)
 NVCCFLAGS := -O3 -Xcompiler -fPIC
 SHAREDFLAGS = -I $(INC_DIR) -lpthread
 LDFLAGS := -shared
 LIB := -L lib -lpthread
 INC := -I $(INC_DIR)
 
+UNAME_S := $(shell uname -s)
+
 INSTALL_LIB_DIR := /usr/lib
-INSTALL_INC_DIR := /usr/include
+ifeq ($(UNAME_S), Linux)
+	INSTALL_INC_DIR := /usr/include
+endif
+ifeq ($(UNAME_S), Darwin)
+	INSTALL_INC_DIR := /usr/local/include 
+endif 
+
 
 PY_SUFFIX := $(shell python3-config --extension-suffix)
 PY_INCLUDES := $(shell python3 -m pybind11 --includes)
@@ -47,6 +57,17 @@ define compile_target
 	$(NVCC) $(addprefix $(OBJ_DIR)/, $1.o) $(CPP_OBJ_FILES) $(CU_OBJ_FILES) -o $(addprefix $(BUILD_DIR)/, $1)
 endef
 
+define compile_test 
+	$(NVCC) $(addprefix $(TEST_DIR)/, $1.cpp) -laddm -o $(addprefix $(BUILD_DIR)/, $1)
+endef
+
+install: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
+	$(NVCC) $(LDFLAGS) $(MACROS) -o $(INSTALL_LIB_DIR)/libaddm.so $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
+	@echo Installing for $(UNAME_S) in $(INSTALL_INC_DIR)
+	cp -TRv $(INC_DIR) $(INSTALL_INC_DIR)/addm
+
+uninstall: 
+	rm -rf $(INSTALL_INC_DIR)/addm
 
 sim: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
 	$(foreach source, $(SIM_EXECS), $(call compile_target, $(source));)
@@ -55,20 +76,17 @@ sim: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
 mle: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
 	$(foreach source, $(MLE_EXECS), $(call compile_target, $(source));)
 
-test: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
-	$(foreach source, $(TEST_EXECS), $(call compile_target, $(source));)
+test: 
+	$(foreach source, $(TEST_EXECS), $(call compile_test, $(source));)
 
-all: sim mle test
+run: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
+	$(foreach source, $(RUN_EXECS), $(call compile_target, $(source));)
 
-
-install: $(OBJ_DIR) $(BUILD_DIR) $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
-	$(NVCC) $(LDFLAGS) $(MACROS) -o $(INSTALL_LIB_DIR)/libaddm.so $(CPP_OBJ_FILES) $(CU_OBJ_FILES)
-	cp -TRv $(INC_DIR) $(INSTALL_INC_DIR)/addm
+all: sim mle run
 
 
 pybind: 
 	$(NVCC) $(LDFLAGS) $(NVCCFLAGS) $(PY_INCLUDES) $(INC) $(CPP_FILES) $(CU_FILES) $(LIB_DIR)/bindings.cpp -o $(PY_SO_FILE)
-
 
 
 .PHONY: clean
